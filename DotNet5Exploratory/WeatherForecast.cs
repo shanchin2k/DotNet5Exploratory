@@ -4,6 +4,7 @@ namespace DotNet5Exploratory
 {
     public class WeatherForecast
     {
+        public int ID { get; set; }
         public DateTime Date { get; set; }
 
         public int TemperatureC { get; set; }
