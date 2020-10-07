@@ -39,6 +39,11 @@ namespace DotNet5Exploratory.Controllers
             return wf;
         }
 
+        /// <summary>
+        /// Post WeatherForecast
+        /// </summary>
+        /// <param name="wf"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] WeatherForecast wf)
         {
