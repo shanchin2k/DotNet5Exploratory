@@ -11,6 +11,8 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
 using Microsoft.Net.Http.Headers;
+using DotNet5Exploratory.ApiHelpers;
+using Newtonsoft.Json.Serialization;
 
 namespace DotNet5Exploratory
 {
@@ -26,14 +28,16 @@ namespace DotNet5Exploratory
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOData();
 
             services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;                    
-            });
-           
+                .AddNewtonsoftJson(
+            options =>
+                {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    options.SerializerSettings.Converters.Add(new InputFieldStatusConverter());
+                });
+
+            services.AddOData();            
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -62,7 +66,7 @@ namespace DotNet5Exploratory
             {
                 endpoints.MapControllers();
                 endpoints.EnableDependencyInjection();
-                endpoints.Select().Filter().Expand().MaxTop(10);
+                endpoints.Select().Count().Filter().Expand().MaxTop(10);
                 endpoints.MapODataRoute("odata", "odata", GetEdmModel());             
             });
 
